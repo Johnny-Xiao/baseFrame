@@ -12,6 +12,10 @@
            http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
            http://www.springframework.org/schema/task
            http://www.springframework.org/schema/task/spring-task-4.3.xsd">
+           
+    <import resource="classpath:spring-redis.xml"/>
+    <import resource="classpath:spring-mybatis.xml"/>
+    <import resource="classpath:spring-mvc.xml"/>    
 
 	<!-- 使用AOP注解 -->
 	<aop:aspectj-autoproxy proxy-target-class="true" />
@@ -27,49 +31,7 @@
 	<task:annotation-driven scheduler="qbScheduler"
 		mode="proxy" />
 	<task:scheduler id="qbScheduler" pool-size="10" />
-	<context:property-placeholder location="classpath:jdbc.properties" />
-	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
-		destroy-method="close">
-
-		<!-- 将配置文件写在properties配置文件中 -->
-		<property name="driverClassName" value="${jdbc.driverClassName}" />
-
-		<property name="url" value="${jdbc.url}" />
-
-		<property name="username" value="${jdbc.username}" />
-
-		<property name="password" value="${jdbc.password}" />
-
-		<!-- 连接池启动的初始值 -->
-		<property name="initialSize" value="${jdbc.initialSize}" />
-
-		<!-- 连接池的最大值 -->
-		<property name="maxActive" value="${jdbc.maxActive}" />
-
-		<!-- 最大空闲值：当经过一个高峰时间后，连接池可以慢慢将已经用不到的连接慢慢释放一部分，一直减少到maxIdle为止 -->
-		<property name="maxIdle" value="${jdbc.maxIdle}" />
-
-		<!-- 最小空闲值：当空闲的连接数少于阀值时，连接池就会预申请一些连接，以免洪峰来时来不及申请 -->
-		<property name="minIdle" value="${jdbc.minIdle}"></property>
-		<!-- -->
-	</bean>
-
-	<!-- 绑定mybatis -->
-	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<!--dataSource属性指定要用到的连接池 -->
-		<property name="dataSource" ref="dataSource" />
-		<!--configLocation属性指定mybatis的核心配置文件 -->
-		<property name="configLocation" value="classpath:Configuration.xml" />
-		<!-- 自动扫描 mapping的配置文件 -->
-		<property name="mapperLocations"
-			value="classpath:com/project/manager/mapping/**/*.xml" />
-	</bean>
-	<!-- DAO接口所在包名，Spring会自动查找其下的类 -->
-	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.project.manager.dao" />
-		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
-	</bean>
-
+	
 	<!-- 开启事务管理 -->
 	<bean id="txManager"
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
@@ -77,6 +39,4 @@
 	</bean>
 	<tx:annotation-driven transaction-manager="txManager"
 		proxy-target-class="true" />
-
-
 </beans>
