@@ -3,6 +3,8 @@ package spring.test.redis;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -16,12 +18,17 @@ import com.project.manager.util.RedisUtil;
 /*@Rollback*/
 public class RedisTest {
 	
+	//@Autowired
+	//private RedisUtil redisUtil;
 	@Autowired
-	private RedisUtil redisUtil;
+	@Qualifier("redisTemplate")
+	public RedisTemplate<String, Object> redisTemplate;
+
 	
 	@Test
 	public void test() {
-		redisUtil.getCacheObject("test1");
+		redisTemplate.opsForValue().get("k1");
+		//redisUtil.getCacheObject("test1");
 		System.out.println("test");
 	}
 }
